@@ -1,3 +1,9 @@
+"""
+Module Name: alien.py
+Description: 
+Exports: class Alien(Sprite)
+"""
+
 import pygame
 from pygame.sprite import Sprite
 

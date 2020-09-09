@@ -1,9 +1,15 @@
+"""
+Module Name: button.py
+Description: 
+Exports: class Button
+"""
+
 import pygame.font
 
 class Button:
     """Class for creating a clickable button on screen with a message."""
 
-    def __init__(self, ai_game, msg, button_color=(0, 255, 0), 
+    def __init__(self, ai_game, msg, button_color, 
             offset_center=(0,0)):
         """Initialize button attributes."""
         self.screen = ai_game.screen

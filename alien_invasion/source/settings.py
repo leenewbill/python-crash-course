@@ -1,3 +1,9 @@
+"""
+Module Name: settings.py
+Description: 
+Exports: class Settings
+"""
+
 class Settings:
     """A class to store all settings for Alien Invasion."""
 
@@ -20,12 +26,13 @@ class Settings:
         # Alien settings
         self.fleet_drop_speed = 10
 
-        # Game level settings
-        self.game_level = 1
-        self.starting_level = 0
+        # Game difficulty
+        self.difficulty = 'easy'
 
         # How quickly the game speeds up
         self.speedup_scale = 1.1
+        # How quickly the alien point values increase
+        self.score_scale = 1.5
 
         self.initialize_dynamic_settings()
 
@@ -35,18 +42,17 @@ class Settings:
         self.bullet_speed = 3.0
         self.alien_speed = 1.0
 
-        for num in range(self.starting_level):
-            self.increase_speed()
-
         # fleet_direction of 1 represents right; -1 represents left.
         self.fleet_direction = 1
 
-    def increase_speed(self):
-        """Increase speed settings."""
-        self.ship_speed *= self.speedup_scale
-        self.bullet_speed *= self.speedup_scale
-        self.alien_speed *= self.speedup_scale
+        # Scoring
+        self.alien_points = 50
 
-        self.game_level += 1
+    def increase_speed(self, num_times=1):
+        """Increase speed settings and alien point values."""
+        for i in range(num_times):
+            self.ship_speed *= self.speedup_scale
+            self.bullet_speed *= self.speedup_scale
+            self.alien_speed *= self.speedup_scale
 
-        print(f"level = {self.game_level}, ship speed = {self.ship_speed}")
+            self.alien_points = int(self.alien_points * self.score_scale)
