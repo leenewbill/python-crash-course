@@ -14,6 +14,9 @@ class Settings:
         self.screen_height = 800
         self.bg_color = (230, 230, 230)
 
+        # JSON filename for storing high score
+        self.high_score_json = 'high_score.json'
+
         # Ship settings
         self.ship_limit = 3
 
