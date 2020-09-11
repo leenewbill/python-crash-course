@@ -41,16 +41,50 @@ class AlienInvasion:
 
         self._create_fleet()
 
-        # Make the buttons.
-        #   Play button: green button at the center of the screen.
+        self._create_buttons()
+
+    def _create_fleet(self):
+        """Create the fleet of aliens."""
+        # Create an alien and find the number of aliens in a row.
+        # Spacing between each alien is equal to one alien width.
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        # Determine the number of rows of aliens that fit on the screen.
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height
+                - (3 * alien_height) - ship_height)
+        number_rows = available_space_y // (2 * alien_height)
+
+        # Create the full fleet of aliens.
+        for row_number in range(number_rows):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number, row_number)
+
+    def _create_alien(self, alien_number, row_number):
+        """Create an alien and place it in the row."""
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        self.aliens.add(alien)
+
+    def _create_buttons(self):
+        """
+        Make the buttons:
+            Play button: green button at the center of the screen.
+            Easy button: green button below and left of Play button.
+            Medium button: orange button below Play button.
+            Hard button: red button below and right of Play button.
+        """
         self.play_button = Button(self, "Play", (0, 255, 0), (0, 0))
-        #   Easy button: green button below and left of Play button.
         self.easy_button = Button(self, "Easy", (0, 255, 0),
                 (self.play_button.width * -1.5, self.play_button.height * 2))
-        #   Medium button: orange button below Play button.
         self.medium_button = Button(self, "Medium", (255, 165, 0),
                 (0, self.play_button.height * 2))
-        #   Hard button: red button below and right of Play button.
         self.hard_button = Button(self, "Hard", (255, 0, 0),
                 (self.play_button.width * 1.5, self.play_button.height * 2))
 
@@ -80,6 +114,13 @@ class AlienInvasion:
                     mouse_pos = pygame.mouse.get_pos()
                     self._check_buttons(mouse_pos)
 
+    def _exit_game(self):
+        """Saves the high score to file, then sends a system exit command."""
+        with open(self.settings.high_score_json, 'w') as f:
+            json.dump(self.stats.high_score, f)
+
+        sys.exit()
+
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_RIGHT:
@@ -93,14 +134,6 @@ class AlienInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
 
-    def _exit_game(self):
-        """Saves the high score to file, then sends a system exit command."""
-        with open(self.settings.high_score_json, 'w') as f:
-            json.dump(self.stats.high_score, f)
-        print(f"Exit: high_score = {self.stats.high_score}")
-
-        sys.exit()
-
     def _start_game(self):
         """Resets the game elements and prepares for play."""
         # Reset the game settings.
@@ -109,9 +142,7 @@ class AlienInvasion:
         # Reset the game statistics.
         self.stats.reset_stats()
         self.stats.game_active = True
-        self.sb.prep_score()
-        self.sb.prep_level()
-        self.sb.prep_ships()
+        self.sb.prep_images()
 
         # Get rid of any remaining aliens and bullets.
         self.aliens.empty()
@@ -168,7 +199,6 @@ class AlienInvasion:
         # Refresh the Play button.
         self.play_button.prep_msg("Play")
 
-
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""
         if len(self.bullets) < self.settings.bullets_allowed:
@@ -203,7 +233,7 @@ class AlienInvasion:
             self.start_new_level()
 
     def start_new_level(self):
-        """Clears the bullets, creates a new fleet, increases the level."""
+        """Clear the bullets, create a new fleet, increase the level."""
         self.bullets.empty()
         self._create_fleet()
         self.stats.increase_level()
@@ -254,35 +284,6 @@ class AlienInvasion:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
 
-    def _create_fleet(self):
-        """Create the fleet of aliens."""
-        # Create an alien and find the number of aliens in a row.
-        # Spacing between each alien is equal to one alien width.
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        available_space_x = self.settings.screen_width - (2 * alien_width)
-        number_aliens_x = available_space_x // (2 * alien_width)
-
-        # Determine the number of rows of aliens that fit on the screen.
-        ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height
-                - (3 * alien_height) - ship_height)
-        number_rows = available_space_y // (2 * alien_height)
-
-        # Create the full fleet of aliens.
-        for row_number in range(number_rows):
-            for alien_number in range(number_aliens_x):
-                self._create_alien(alien_number, row_number)
-
-    def _create_alien(self, alien_number, row_number):
-        """Create an alien and place it in the row."""
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
-        self.aliens.add(alien)
-
     def _check_fleet_edges(self):
         """Respond appropriately if any aliens have reached an edge."""
         for alien in self.aliens.sprites():
@@ -309,12 +310,16 @@ class AlienInvasion:
 
         # Draw the buttons if the game is inactive.
         if not self.stats.game_active:
-            self.play_button.draw_button()
-            self.easy_button.draw_button()
-            self.medium_button.draw_button()
-            self.hard_button.draw_button()
+            self._draw_buttons()
 
         pygame.display.flip()
+
+    def _draw_buttons(self):
+        """Draw the buttons to the screen."""
+        self.play_button.draw_button()
+        self.easy_button.draw_button()
+        self.medium_button.draw_button()
+        self.hard_button.draw_button()
 
 if __name__ == '__main__':
     # Make a game instance, and run the game.

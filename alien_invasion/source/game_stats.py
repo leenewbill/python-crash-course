@@ -3,6 +3,7 @@ Module Name: game_stats.py
 Description: 
 Exports: class GameStats
 """
+
 import json
 
 class GameStats:
@@ -16,14 +17,14 @@ class GameStats:
         # Start game in an inactive state.
         self.game_active = False
 
-        # High score should never be reset.
+        # Read the high score from the JSON. 
+        #   If the JSON doesn't exist, set high_score to 0.
         try:
             with open(self.settings.high_score_json) as f:
                 self.high_score = json.load(f)
         except FileNotFoundError:
             self.high_score = 0
         
-
     def reset_stats(self):
         """Initialize statistics that can change during the game."""
         self.ships_left = self.settings.ship_limit

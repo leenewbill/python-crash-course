@@ -27,7 +27,8 @@ class Button:
         self.rect.x += offset_center[0]
         self.rect.y += offset_center[1]
 
-        # The button message needs to be prepped only once.
+        # The button message needs to be prepped once, except after a button
+        #   color change.
         self.prep_msg(msg)
 
     def prep_msg(self, msg):
