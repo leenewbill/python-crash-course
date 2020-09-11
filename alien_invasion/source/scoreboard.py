@@ -1,6 +1,6 @@
 """
 Module Name: scoreboard.py
-Description: 
+Description: Class to report scoring information.
 Exports: class Scoreboard
 """
 
@@ -10,7 +10,7 @@ from pygame.sprite import Group
 from ship import Ship
 
 class Scoreboard:
-    """A class to report scoring information."""
+    """Class to report scoring information."""
 
     def __init__(self, ai_game):
         """Initialize scorekeeping attributes."""
@@ -23,6 +23,15 @@ class Scoreboard:
         # Font settings for scoring information.
         self.text_color = (30, 30, 30)
         self.font = pygame.font.SysFont(None, 48)
+
+        # Pre-initialize variables to make pylint happy.
+        self.score_image = None
+        self.score_rect = None
+        self.high_score_image = None
+        self.high_score_rect = None
+        self.level_image = None
+        self.level_rect = None
+        self.ships = None
 
         # Prepare the initial score images.
         self.prep_images()
@@ -40,7 +49,7 @@ class Scoreboard:
         score_str = "{:,}".format(rounded_score)
         self.score_image = self.font.render(score_str, True,
                 self.text_color, self.settings.bg_color)
-        
+
         # Display the score at the top right of the screen.
         self.score_rect = self.score_image.get_rect()
         self.score_rect.right = self.screen_rect.right - 20
@@ -52,7 +61,7 @@ class Scoreboard:
         high_score_str = "{:,}".format(high_score)
         self.high_score_image = self.font.render(high_score_str, True,
                 self.text_color, self.settings.bg_color)
-            
+
         # Center the high score at the top of the screen.
         self.high_score_rect = self.high_score_image.get_rect()
         self.high_score_rect.centerx = self.screen_rect.centerx
@@ -61,7 +70,7 @@ class Scoreboard:
     def prep_level(self):
         """Turn the level into a rendered image."""
         level_str = str(self.stats.level)
-        self.level_image = self.font.render(level_str, True, self.text_color, 
+        self.level_image = self.font.render(level_str, True, self.text_color,
                 self.settings.bg_color)
 
         # Position the level below the score.
@@ -90,4 +99,3 @@ class Scoreboard:
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
         self.ships.draw(self.screen)
-

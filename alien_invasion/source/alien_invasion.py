@@ -1,7 +1,7 @@
 """
 Module Name: alien_invasion.py
-Description: 
-Exports: class AlienInvasion 
+Description: Overall class to manage Alien Invasion game assets and behavior.
+Exports: class AlienInvasion
 """
 
 import sys
@@ -19,7 +19,7 @@ from bullet import Bullet
 from alien import Alien
 
 class AlienInvasion:
-    """Overall class to manage game assets and behavior."""
+    """Overall class to manage Alien Invasion game assets and behavior."""
 
     def __init__(self):
         """Initialize the game, and create game resources."""
@@ -33,7 +33,7 @@ class AlienInvasion:
         # Create an instance to store game statistics, and create a
         #   scoreboard.
         self.stats = GameStats(self)
-        self.sb = Scoreboard(self)
+        self.scoreboard = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -66,7 +66,7 @@ class AlienInvasion:
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in the row."""
         alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
+        alien_width, _ = alien.rect.size
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
@@ -116,8 +116,8 @@ class AlienInvasion:
 
     def _exit_game(self):
         """Saves the high score to file, then sends a system exit command."""
-        with open(self.settings.high_score_json, 'w') as f:
-            json.dump(self.stats.high_score, f)
+        with open(self.settings.high_score_json, 'w') as file_handler:
+            json.dump(self.stats.high_score, file_handler)
 
         sys.exit()
 
@@ -142,7 +142,7 @@ class AlienInvasion:
         # Reset the game statistics.
         self.stats.reset_stats()
         self.stats.game_active = True
-        self.sb.prep_images()
+        self.scoreboard.prep_images()
 
         # Get rid of any remaining aliens and bullets.
         self.aliens.empty()
@@ -184,11 +184,11 @@ class AlienInvasion:
 
     def set_difficulty(self, difficulty):
         """
-        Set the game difficulty, and change the color of the Play button to 
+        Set the game difficulty, and change the color of the Play button to
             match.
         """
         self.settings.difficulty = difficulty
-        
+
         if difficulty == 'easy':
             self.play_button.button_color = self.easy_button.button_color
         if difficulty == 'medium':
@@ -226,8 +226,8 @@ class AlienInvasion:
         if collisions:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
-            self.sb.prep_score()
-            self.sb.check_high_score()
+            self.scoreboard.prep_score()
+            self.scoreboard.check_high_score()
 
         if not self.aliens:
             self.start_new_level()
@@ -237,7 +237,7 @@ class AlienInvasion:
         self.bullets.empty()
         self._create_fleet()
         self.stats.increase_level()
-        self.sb.prep_level()
+        self.scoreboard.prep_level()
 
     def _update_aliens(self):
         """
@@ -268,7 +268,7 @@ class AlienInvasion:
         if self.stats.ships_left > 0:
             # Decrement ships_left, and update scoreboard.
             self.stats.ships_left -= 1
-            self.sb.prep_ships()
+            self.scoreboard.prep_ships()
 
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
@@ -306,7 +306,7 @@ class AlienInvasion:
         self.aliens.draw(self.screen)
 
         # Draw the score information.
-        self.sb.show_score()
+        self.scoreboard.show_score()
 
         # Draw the buttons if the game is inactive.
         if not self.stats.game_active:

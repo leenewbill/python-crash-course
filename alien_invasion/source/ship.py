@@ -1,6 +1,6 @@
 """
 Module Name: ship.py
-Description: 
+Description: A class to manage the ship.
 Exports: class Ship(Sprite)
 """
 

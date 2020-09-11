@@ -1,6 +1,6 @@
 """
 Module Name: button.py
-Description: 
+Description: Class for creating a clickable button on screen with a message.
 Exports: class Button
 """
 
@@ -9,7 +9,7 @@ import pygame.font
 class Button:
     """Class for creating a clickable button on screen with a message."""
 
-    def __init__(self, ai_game, msg, button_color, 
+    def __init__(self, ai_game, msg, button_color,
             offset_center=(0,0)):
         """Initialize button attributes."""
         self.screen = ai_game.screen
@@ -33,7 +33,7 @@ class Button:
 
     def prep_msg(self, msg):
         """Turn msg into a rendered image and center text on the button."""
-        self.msg_image = self.font.render(msg, True, self.text_color, 
+        self.msg_image = self.font.render(msg, True, self.text_color,
                 self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center

@@ -1,6 +1,6 @@
 """
 Module Name: settings.py
-Description: 
+Description: A class to store all settings for Alien Invasion.
 Exports: class Settings
 """
 
@@ -37,6 +37,9 @@ class Settings:
         # How quickly the alien point values increase
         self.score_scale = 1.5
 
+        # Pre-initialize variables to make pylint happy.
+        self.alien_points = None
+
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):
@@ -53,7 +56,7 @@ class Settings:
 
     def increase_speed(self, num_times=1):
         """Increase speed settings and alien point values."""
-        for i in range(num_times):
+        for _ in range(num_times):
             self.ship_speed *= self.speedup_scale
             self.bullet_speed *= self.speedup_scale
             self.alien_speed *= self.speedup_scale

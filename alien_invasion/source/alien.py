@@ -1,6 +1,6 @@
 """
 Module Name: alien.py
-Description: 
+Description: Class to represent a single alien in the fleet.
 Exports: class Alien(Sprite)
 """
 
@@ -8,7 +8,7 @@ import pygame
 from pygame.sprite import Sprite
 
 class Alien(Sprite):
-    """A class to represent a single alien in the fleet."""
+    """Class to represent a single alien in the fleet."""
 
     def __init__(self, ai_game):
         """Initialize the alien and set its starting position."""
