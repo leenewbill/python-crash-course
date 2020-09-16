@@ -1,5 +1,7 @@
 .vscode/
+*.code-workspace
 
 __pycache__/
 
 alien_invasion/source/high_score.json
+data_visualization/source/*.html
