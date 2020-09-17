@@ -1,9 +1,3 @@
-"""
-Module Name:
-Description:
-Exports:
-"""
-
 from random import choice
 
 class RandomWalk:
@@ -38,7 +32,7 @@ class RandomWalk:
 
     def get_step(self):
         """
-        Chooses a random direction and distance, then returns the multiple of 
+        Chooses a random direction and distance, then returns the multiple of
             the two.
         """
         direction = choice([1, -1])

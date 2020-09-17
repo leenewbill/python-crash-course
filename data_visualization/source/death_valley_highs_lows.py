@@ -11,9 +11,9 @@ with open(filename) as f:
     # Get high temperatures from this file.
     dates, highs, lows = [], [], []
     for row in reader:
-        current_date = datetime.strptime(row[2], '%Y-%m-%d') 
+        current_date = datetime.strptime(row[2], '%Y-%m-%d')
         try:
-            high = int(row[4]) 
+            high = int(row[4])
             low = int(row[5])
         except ValueError:
             print(f"Missing data for {current_date}")
